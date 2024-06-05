@@ -176,15 +176,12 @@
         android:textColor="#FFFFFF"
         android:textSize="18sp" />
 
-    <ListView
-        android:id="@+id/programListView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/programRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="#121212"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="8dp"
         android:padding="8dp" />
 
 </LinearLayout>
-

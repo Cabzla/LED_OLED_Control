@@ -9,6 +9,8 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -17,10 +19,10 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ProgramAdapter.OnItemClickListener {
 
     private val esp32Ip = "192.168.4.1"
-    private lateinit var adapter: ArrayAdapter<String>
+    private lateinit var adapter: ProgramAdapter
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var jsonArray: JSONArray
 
@@ -31,13 +33,14 @@ class MainActivity : AppCompatActivity() {
         val saveProgramButton: Button = findViewById(R.id.saveProgramButton)
         val submitButton: Button = findViewById(R.id.submitButton)
         val turnOffAllButton: Button = findViewById(R.id.turnOffAllButton)
-        val listView: ListView = findViewById(R.id.programListView)
+        val recyclerView: RecyclerView = findViewById(R.id.programRecyclerView)
 
         sharedPreferences = getSharedPreferences("LEDController", Context.MODE_PRIVATE)
         jsonArray = loadPrograms()
 
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, ArrayList())
-        listView.adapter = adapter
+        adapter = ProgramAdapter(this, mutableListOf(), this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
 
         submitButton.setOnClickListener {
             val selectedLEDs = mutableListOf<String>()
@@ -60,10 +63,6 @@ class MainActivity : AppCompatActivity() {
             showSaveDialog()
         }
 
-        listView.setOnItemClickListener { _, _, position, _ ->
-            showProgramDetails(position)
-        }
-
         loadSavedPrograms()
     }
 
@@ -72,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         val dialogView: View = inflater.inflate(R.layout.dialog_save_program, null)
         val editTextProgramName: EditText = dialogView.findViewById(R.id.editTextProgramName)
 
-        val dialog = AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this, R.style.DialogTheme)
             .setTitle("Programm speichern")
             .setView(dialogView)
             .setPositiveButton("Speichern") { dialog, _ ->
@@ -118,6 +117,10 @@ class MainActivity : AppCompatActivity() {
         loadSavedPrograms()
     }
 
+    override fun onItemClick(position: Int) {
+        showProgramDetails(position)
+    }
+
     private fun showProgramDetails(position: Int) {
         val program = jsonArray.getJSONObject(position)
         val name = program.optString("name", "Kein Name")
@@ -132,7 +135,7 @@ class MainActivity : AppCompatActivity() {
         val detailsTextView: TextView = dialogView.findViewById(R.id.detailsTextView)
         detailsTextView.text = details
 
-        val dialog = AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this, R.style.DialogTheme)
             .setView(dialogView)
             .setPositiveButton("Starten") { _, _ ->
                 val selectedLEDs = mutableListOf<String>()
@@ -151,14 +154,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadSavedPrograms() {
-        val programs = mutableListOf<String>()
+        val programs = mutableListOf<JSONObject>()
         for (i in 0 until jsonArray.length()) {
             val program = jsonArray.getJSONObject(i)
-            val name = program.optString("name", "Kein Name")
-            programs.add(name)
+            programs.add(program)
         }
-        adapter.clear()
-        adapter.addAll(programs)
+        adapter.updatePrograms(programs)
     }
 
     private fun loadPrograms(): JSONArray {
