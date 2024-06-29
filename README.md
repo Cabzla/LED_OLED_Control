@@ -25,7 +25,7 @@ This project provides an Android application to control LEDs and an OLED display
 
 ### ESP32 Firmware
 
-The firmware for the ESP32 can be found in the following repository: [ESP32 LED and Display Controller Firmware](https://github.com/Cabzla/LED_OLED_ESP32l)
+The firmware for the ESP32 can be found in the following repository: [ESP32 LED and Display Controller Firmware](https://github.com/Cabzla/LED_OLED_ESP32)
 
 ### Android App Setup
 
