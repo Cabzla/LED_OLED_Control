@@ -1,4 +1,4 @@
-# ESP32 LED and Display Controller
+# ESP32 LED and Display Controller Android App
 
 ## Overview
 
@@ -23,30 +23,12 @@ This project provides an Android application to control LEDs and an OLED display
 
 ## Setup
 
-### Hardware Requirements
-- ESP32 Development Board
-- LEDs (Red, Green, Yellow) connected to GPIO pins
-- AZ-Delivery 0.91 inch OLED I2C display with 128x32 pixels
+### Android Client
 
-### Software Requirements
-- Arduino IDE
-- Android Studio
+The Client code for the ESP32 can be found in the following repository: [ESP32 LED and Display Controller](https://github.com/Cabzla/LED_OLED_Control)
 
-### Arduino IDE Setup
-1. **Install ESP32 Board**:
-   - Open Arduino IDE.
-   - Go to `File` -> `Preferences`.
-   - In the "Additional Board Manager URLs" field, add: `https://dl.espressif.com/dl/package_esp32_index.json`.
-   - Go to `Tools` -> `Board` -> `Board Manager` and install the `esp32` platform.
+### Android App Setup
 
-2. **Install Required Libraries**:
-   - `WiFi.h` for WiFi functionality.
-   - `Adafruit_GFX.h` and `Adafruit_SSD1306.h` for OLED display control.
-
-3. **ESP32 Code**:
-   - Upload the provided `ESP32_LED_Display_Controller.ino` code to your ESP32.
-
-### Android Studio Setup
 1. **Clone the Repository**:
    - Clone this repository to your local machine.
 
