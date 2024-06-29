@@ -6,7 +6,7 @@
     tools:context=".DisplayFragment">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+        android:id="@+id/expandableCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -24,80 +24,105 @@
             android:padding="16dp"
             android:gravity="center_horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Display Steuerung"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:layout_marginBottom="16dp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/timeInput"
+                <TextView
+                    android:id="@+id/displayControlTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Display Steuerung"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_centerInParent="true" />
+
+                <ImageView
+                    android:id="@+id/expandIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_expand_more"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    app:tint="@color/white" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/expandableLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Uhrzeit"
-                android:inputType="text"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:backgroundTint="@color/white"
-                android:layout_marginTop="8dp" />
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginTop="16dp">
 
-            <EditText
-                android:id="@+id/trainNumberInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Zugnummer"
-                android:inputType="text"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:backgroundTint="@color/white"
-                android:layout_marginTop="8dp" />
+                <EditText
+                    android:id="@+id/timeInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Uhrzeit"
+                    android:inputType="text"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:layout_marginTop="8dp" />
 
-            <EditText
-                android:id="@+id/trainNameInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Zugname"
-                android:inputType="text"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:backgroundTint="@color/white"
-                android:layout_marginTop="8dp" />
+                <EditText
+                    android:id="@+id/trainNumberInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Zugnummer"
+                    android:inputType="text"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:layout_marginTop="8dp" />
 
-            <EditText
-                android:id="@+id/trackNumberInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Gleisnummer"
-                android:inputType="text"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:backgroundTint="@color/white"
-                android:layout_marginTop="8dp" />
+                <EditText
+                    android:id="@+id/trainNameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Zugname"
+                    android:inputType="text"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:layout_marginTop="8dp" />
 
-            <EditText
-                android:id="@+id/infoTextInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Info Text"
-                android:inputType="text"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:backgroundTint="@color/white"
-                android:layout_marginTop="8dp" />
+                <EditText
+                    android:id="@+id/trackNumberInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Gleisnummer"
+                    android:inputType="text"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:layout_marginTop="8dp" />
 
-            <EditText
-                android:id="@+id/routeInfoInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Streckeninformationen"
-                android:inputType="text"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:backgroundTint="@color/white"
-                android:layout_marginTop="8dp" />
+                <EditText
+                    android:id="@+id/infoTextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Info Text"
+                    android:inputType="text"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:layout_marginTop="8dp" />
+
+                <EditText
+                    android:id="@+id/routeInfoInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Streckeninformationen"
+                    android:inputType="text"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:layout_marginTop="8dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -107,7 +132,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/cardView"
+        app:layout_constraintTop_toBottomOf="@id/expandableCardView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="8dp">

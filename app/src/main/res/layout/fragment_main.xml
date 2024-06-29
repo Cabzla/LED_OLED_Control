@@ -6,7 +6,7 @@
     tools:context=".MainFragment">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+        android:id="@+id/expandableCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="16dp"
@@ -24,58 +24,88 @@
             android:padding="16dp"
             android:gravity="center_horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="LED Steuerung"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:layout_marginBottom="16dp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/ledControlTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LED Steuerung"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_centerInParent="true" />
+
+                <ImageView
+                    android:id="@+id/expandIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_expand_more"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    app:tint="@color/white" />
+            </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/expandableLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal">
 
-                <CheckBox
-                    android:id="@+id/checkBoxRed"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxRed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rot"
+                        android:textColor="@color/white"
+                        android:layout_gravity="center" />
+
+                    <CheckBox
+                        android:id="@+id/checkBoxGreen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Grün"
+                        android:textColor="@color/white"
+                        android:layout_marginStart="16dp"
+                        android:layout_gravity="center" />
+
+                    <CheckBox
+                        android:id="@+id/checkBoxYellow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gelb"
+                        android:textColor="@color/white"
+                        android:layout_marginStart="16dp"
+                        android:layout_gravity="center" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/durationInput"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rot"
-                    android:textColor="@color/white" />
-
-                <CheckBox
-                    android:id="@+id/checkBoxGreen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Grün"
+                    android:hint="sec..."
+                    android:maxLength="4"
+                    android:inputType="number"
                     android:textColor="@color/white"
-                    android:layout_marginStart="16dp" />
+                    android:textColorHint="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:ems="4"
+                    android:gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center" />
 
-                <CheckBox
-                    android:id="@+id/checkBoxYellow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Gelb"
-                    android:textColor="@color/white"
-                    android:layout_marginStart="16dp" />
             </LinearLayout>
-
-            <EditText
-                android:id="@+id/durationInput"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="sec..."
-                android:maxLength="4"
-                android:inputType="number"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:backgroundTint="@color/white"
-                android:ems="4"
-                android:gravity="center"
-                android:layout_marginTop="16dp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -85,7 +115,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/cardView"
+        app:layout_constraintTop_toBottomOf="@id/expandableCardView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="8dp">
@@ -153,5 +183,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="8dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 

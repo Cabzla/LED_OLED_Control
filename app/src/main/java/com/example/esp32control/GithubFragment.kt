@@ -1,5 +1,7 @@
 package com.example.esp32control
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,11 +27,15 @@ class GithubFragment : Fragment() {
         cardAppCode.setOnClickListener {
             // Navigate to APP Code
             //findNavController().navigate(R.id.action_githubFragment_to_appCodeFragment)
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Cabzla/LED_OLED_Control"))
+            startActivity(intent)
         }
 
         cardEsp32Code.setOnClickListener {
             // Navigate to ESP32 Code
             //findNavController().navigate(R.id.action_githubFragment_to_esp32CodeFragment)
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Cabzla/LED_OLED_ESP32"))
+            startActivity(intent)
         }
     }
 }

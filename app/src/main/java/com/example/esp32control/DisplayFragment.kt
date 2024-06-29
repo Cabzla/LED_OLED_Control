@@ -1,14 +1,17 @@
 package com.example.esp32control
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -25,14 +28,16 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class DisplayFragment : Fragment(), DisplayAdapter.OnItemClickListener {
 
     private val esp32Ip = "192.168.4.1"
     private lateinit var adapter: DisplayAdapter
-    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var jsonArray: JSONArray
+
+    private var isExpanded = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,13 +58,27 @@ class DisplayFragment : Fragment(), DisplayAdapter.OnItemClickListener {
         val updateDisplayButton: Button = view.findViewById(R.id.updateDisplayButton)
         val saveDisplayButton: Button = view.findViewById(R.id.saveDisplayButton)
         val recyclerView: RecyclerView = view.findViewById(R.id.displayRecyclerView)
-
-        sharedPreferences = requireActivity().getSharedPreferences("DisplayController", Context.MODE_PRIVATE)
-        jsonArray = loadPrograms()
+        val expandableCardView: View = view.findViewById(R.id.expandableCardView)
+        val expandableLayout: LinearLayout = view.findViewById(R.id.expandableLayout)
+        val expandIcon: ImageView = view.findViewById(R.id.expandIcon)
 
         adapter = DisplayAdapter(requireContext(), mutableListOf(), this)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
+
+        expandableCardView.setOnClickListener {
+            isExpanded = !isExpanded
+            val transition = AutoTransition()
+            transition.duration = 300 // Dauer der Animation in Millisekunden
+            TransitionManager.beginDelayedTransition(view as ViewGroup, transition)
+            if (isExpanded) {
+                expandableLayout.visibility = View.VISIBLE
+                expandIcon.setImageResource(R.drawable.ic_expand_less)
+            } else {
+                expandableLayout.visibility = View.GONE
+                expandIcon.setImageResource(R.drawable.ic_expand_more)
+            }
+        }
 
         updateDisplayButton.setOnClickListener {
             val time = timeInput.text.toString()
@@ -111,7 +130,6 @@ class DisplayFragment : Fragment(), DisplayAdapter.OnItemClickListener {
         dialog.show()
     }
 
-
     private fun saveProgram(name: String) {
         val timeInput: EditText = view?.findViewById(R.id.timeInput) ?: return
         val trainNumberInput: EditText = view?.findViewById(R.id.trainNumberInput) ?: return
@@ -132,23 +150,23 @@ class DisplayFragment : Fragment(), DisplayAdapter.OnItemClickListener {
         }
         jsonArray.put(program)
 
+        val sharedPreferences = requireActivity().getSharedPreferences("DisplayController", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("displayPrograms", jsonArray.toString()).apply()
 
         loadSavedPrograms()
     }
 
     private fun loadSavedPrograms() {
+        val sharedPreferences = requireActivity().getSharedPreferences("DisplayController", Context.MODE_PRIVATE)
+        val programsString = sharedPreferences.getString("displayPrograms", "[]")
+        jsonArray = JSONArray(programsString)
+
         val programs = mutableListOf<JSONObject>()
         for (i in 0 until jsonArray.length()) {
             val program = jsonArray.getJSONObject(i)
             programs.add(program)
         }
         adapter.updatePrograms(programs)
-    }
-
-    private fun loadPrograms(): JSONArray {
-        val programsString = sharedPreferences.getString("displayPrograms", "[]")
-        return JSONArray(programsString)
     }
 
     private fun buildUrl(time: String, trainNumber: String, trainName: String, trackNumber: String, infoText: String, routeInfo: String): String {
@@ -215,6 +233,12 @@ class DisplayFragment : Fragment(), DisplayAdapter.OnItemClickListener {
                 dialog.dismiss()
             }
             .create()
+
+        dialog.setOnShowListener {
+            // button anpassen
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GRAY)
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.GRAY)
+        }
 
         dialog.show()
     }
