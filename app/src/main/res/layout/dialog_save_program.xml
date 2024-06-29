@@ -4,14 +4,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#1E1E1E">
+    android:background="#121212">
 
     <EditText
         android:id="@+id/editTextProgramName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Programmname"
+        android:hint="Name..."
+        android:textColorHint="@color/hintColor"
         android:background="@drawable/input_background"
         android:padding="10dp"
-        android:textColor="#FFFFFF" />
+        android:textColor="#121212" />
 </LinearLayout>

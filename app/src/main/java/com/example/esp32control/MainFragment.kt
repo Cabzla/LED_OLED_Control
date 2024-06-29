@@ -1,14 +1,18 @@
-package com.example.myapplication
+package com.example.esp32control
+
+import android.content.SharedPreferences
+
 
 import android.content.Context
-import android.content.DialogInterface
-import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
@@ -19,35 +23,41 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity(), ProgramAdapter.OnItemClickListener {
+class MainFragment : Fragment(), ProgramAdapter.OnItemClickListener {
 
     private val esp32Ip = "192.168.4.1"
     private lateinit var adapter: ProgramAdapter
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var jsonArray: JSONArray
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_main, container, false)
+    }
 
-        val saveProgramButton: Button = findViewById(R.id.saveProgramButton)
-        val submitButton: Button = findViewById(R.id.submitButton)
-        val turnOffAllButton: Button = findViewById(R.id.turnOffAllButton)
-        val recyclerView: RecyclerView = findViewById(R.id.programRecyclerView)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        sharedPreferences = getSharedPreferences("LEDController", Context.MODE_PRIVATE)
+        val saveProgramButton: Button = view.findViewById(R.id.saveProgramButton)
+        val submitButton: Button = view.findViewById(R.id.submitButton)
+        val turnOffAllButton: Button = view.findViewById(R.id.turnOffAllButton)
+        val recyclerView: RecyclerView = view.findViewById(R.id.programRecyclerView)
+
+        sharedPreferences = requireActivity().getSharedPreferences("LEDController", Context.MODE_PRIVATE)
         jsonArray = loadPrograms()
 
-        adapter = ProgramAdapter(this, mutableListOf(), this)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        adapter = ProgramAdapter(requireContext(), mutableListOf(), this)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
         submitButton.setOnClickListener {
             val selectedLEDs = mutableListOf<String>()
-            val checkBoxRed: CheckBox = findViewById(R.id.checkBoxRed)
-            val checkBoxGreen: CheckBox = findViewById(R.id.checkBoxGreen)
-            val checkBoxYellow: CheckBox = findViewById(R.id.checkBoxYellow)
-            val durationInput: EditText = findViewById(R.id.durationInput)
+            val checkBoxRed: CheckBox = view.findViewById(R.id.checkBoxRed)
+            val checkBoxGreen: CheckBox = view.findViewById(R.id.checkBoxGreen)
+            val checkBoxYellow: CheckBox = view.findViewById(R.id.checkBoxYellow)
+            val durationInput: EditText = view.findViewById(R.id.durationInput)
             if (checkBoxRed.isChecked) selectedLEDs.add("R")
             if (checkBoxGreen.isChecked) selectedLEDs.add("G")
             if (checkBoxYellow.isChecked) selectedLEDs.add("Y")
@@ -71,7 +81,7 @@ class MainActivity : AppCompatActivity(), ProgramAdapter.OnItemClickListener {
         val dialogView: View = inflater.inflate(R.layout.dialog_save_program, null)
         val editTextProgramName: EditText = dialogView.findViewById(R.id.editTextProgramName)
 
-        val dialog = AlertDialog.Builder(this, R.style.DialogTheme)
+        val dialog = AlertDialog.Builder(requireContext(), R.style.DialogTheme)
             .setTitle("Programm speichern")
             .setView(dialogView)
             .setPositiveButton("Speichern") { dialog, _ ->
@@ -79,7 +89,7 @@ class MainActivity : AppCompatActivity(), ProgramAdapter.OnItemClickListener {
                 if (programName.isNotEmpty()) {
                     saveProgram(programName)
                 } else {
-                    Toast.makeText(this, "Bitte geben Sie einen Programmnamen ein", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Bitte geben Sie einen Programmnamen ein", Toast.LENGTH_SHORT).show()
                 }
                 dialog.dismiss()
             }
@@ -88,31 +98,44 @@ class MainActivity : AppCompatActivity(), ProgramAdapter.OnItemClickListener {
             }
             .create()
 
+        dialog.setOnShowListener {
+            val window = dialog.window
+            if (window != null) {
+                val params = window.attributes
+                params.height = WindowManager.LayoutParams.WRAP_CONTENT
+                window.attributes = params
+            }
+            // Positive button (Speichern) anpassen
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GRAY)
+            // Negative button (Abbrechen) anpassen
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.GRAY) // Optional
+        }
+
         dialog.show()
     }
 
+
     private fun saveProgram(name: String) {
         val selectedLEDs = mutableListOf<String>()
-        val checkBoxRed: CheckBox = findViewById(R.id.checkBoxRed)
-        val checkBoxGreen: CheckBox = findViewById(R.id.checkBoxGreen)
-        val checkBoxYellow: CheckBox = findViewById(R.id.checkBoxYellow)
-        val durationInput: EditText = findViewById(R.id.durationInput)
+        val checkBoxRed: CheckBox = view?.findViewById(R.id.checkBoxRed) ?: return
+        val checkBoxGreen: CheckBox = view?.findViewById(R.id.checkBoxGreen) ?: return
+        val checkBoxYellow: CheckBox = view?.findViewById(R.id.checkBoxYellow) ?: return
+        val durationInput: EditText = view?.findViewById(R.id.durationInput) ?: return
         if (checkBoxRed.isChecked) selectedLEDs.add("R")
         if (checkBoxGreen.isChecked) selectedLEDs.add("G")
         if (checkBoxYellow.isChecked) selectedLEDs.add("Y")
         val duration = durationInput.text.toString()
         val timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
 
-        val program = JSONObject()
-        program.put("name", name)
-        program.put("leds", JSONArray(selectedLEDs))
-        program.put("duration", duration)
-        program.put("timestamp", timestamp)
+        val program = JSONObject().apply {
+            put("name", name)
+            put("leds", JSONArray(selectedLEDs))
+            put("duration", duration)
+            put("timestamp", timestamp)
+        }
         jsonArray.put(program)
 
-        val editor = sharedPreferences.edit()
-        editor.putString("programs", jsonArray.toString())
-        editor.apply()
+        sharedPreferences.edit().putString("programs", jsonArray.toString()).apply()
 
         loadSavedPrograms()
     }
@@ -135,7 +158,7 @@ class MainActivity : AppCompatActivity(), ProgramAdapter.OnItemClickListener {
         val detailsTextView: TextView = dialogView.findViewById(R.id.detailsTextView)
         detailsTextView.text = details
 
-        val dialog = AlertDialog.Builder(this, R.style.DialogTheme)
+        val dialog = AlertDialog.Builder(requireContext(), R.style.DialogTheme)
             .setView(dialogView)
             .setPositiveButton("Starten") { _, _ ->
                 val selectedLEDs = mutableListOf<String>()
@@ -150,8 +173,18 @@ class MainActivity : AppCompatActivity(), ProgramAdapter.OnItemClickListener {
             }
             .create()
 
+        dialog.setOnShowListener {
+            val window = dialog.window
+            if (window != null) {
+                val params = window.attributes
+                params.height = WindowManager.LayoutParams.WRAP_CONTENT
+                window.attributes = params
+            }
+        }
+
         dialog.show()
     }
+
 
     private fun loadSavedPrograms() {
         val programs = mutableListOf<JSONObject>()
@@ -207,4 +240,3 @@ class MainActivity : AppCompatActivity(), ProgramAdapter.OnItemClickListener {
         }
     }
 }
-
