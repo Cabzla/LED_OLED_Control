@@ -48,6 +48,11 @@ class SplashActivity : AppCompatActivity() {
                     }
                 } else {
                     statusText.text = "Fehler bei der Kommunikation"
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(3000)
+                        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                        finish()
+                    }
                 }
             }
         }
