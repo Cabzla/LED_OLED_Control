@@ -8,12 +8,7 @@ import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,13 +23,12 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
-class DisplayFragment : Fragment(), DisplayAdapter.OnItemClickListener {
+class DisplayFragment : Fragment(), ProgramAdapter.OnItemClickListener {
 
     private val esp32Ip = "192.168.4.1"
-    private lateinit var adapter: DisplayAdapter
+    private lateinit var adapter: ProgramAdapter
     private lateinit var jsonArray: JSONArray
 
     private var isExpanded = false
@@ -62,7 +56,7 @@ class DisplayFragment : Fragment(), DisplayAdapter.OnItemClickListener {
         val expandableLayout: LinearLayout = view.findViewById(R.id.expandableLayout)
         val expandIcon: ImageView = view.findViewById(R.id.expandIcon)
 
-        adapter = DisplayAdapter(requireContext(), mutableListOf(), this)
+        adapter = ProgramAdapter(requireContext(), mutableListOf(), this)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
@@ -137,7 +131,6 @@ class DisplayFragment : Fragment(), DisplayAdapter.OnItemClickListener {
         val trackNumberInput: EditText = view?.findViewById(R.id.trackNumberInput) ?: return
         val infoTextInput: EditText = view?.findViewById(R.id.infoTextInput) ?: return
         val routeInfoInput: EditText = view?.findViewById(R.id.routeInfoInput) ?: return
-
         val program = JSONObject().apply {
             put("name", name)
             put("time", timeInput.text.toString())
@@ -206,6 +199,17 @@ class DisplayFragment : Fragment(), DisplayAdapter.OnItemClickListener {
         showProgramDetails(position)
     }
 
+    override fun onDeleteClick(position: Int) {
+        deleteProgram(position)
+    }
+
+    private fun deleteProgram(position: Int) {
+        jsonArray.remove(position)
+        adapter.removeProgram(position)
+        val sharedPreferences = requireActivity().getSharedPreferences("DisplayController", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("displayPrograms", jsonArray.toString()).apply()
+    }
+
     private fun showProgramDetails(position: Int) {
         val program = jsonArray.getJSONObject(position)
         val name = program.optString("name", "Kein Name")
@@ -243,8 +247,3 @@ class DisplayFragment : Fragment(), DisplayAdapter.OnItemClickListener {
         dialog.show()
     }
 }
-
-
-
-
-

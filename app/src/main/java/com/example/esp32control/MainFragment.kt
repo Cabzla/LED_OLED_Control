@@ -8,13 +8,7 @@ import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,8 +22,7 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class MainFragment : Fragment(), ProgramAdapter.OnItemClickListener {
 
@@ -194,6 +187,17 @@ class MainFragment : Fragment(), ProgramAdapter.OnItemClickListener {
 
     override fun onItemClick(position: Int) {
         showProgramDetails(position)
+    }
+
+    override fun onDeleteClick(position: Int) {
+        deleteProgram(position)
+    }
+
+    private fun deleteProgram(position: Int) {
+        jsonArray.remove(position)
+        adapter.removeProgram(position)
+        val sharedPreferences = requireActivity().getSharedPreferences("LEDController", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("ledPrograms", jsonArray.toString()).apply()
     }
 
     private fun showProgramDetails(position: Int) {

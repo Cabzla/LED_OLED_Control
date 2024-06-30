@@ -10,11 +10,25 @@
     app:cardElevation="4dp"
     android:backgroundTint="@color/colorPrimary1">
 
-    <TextView
-        android:id="@+id/programNameTextView"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/programNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/delete"
+            android:src="@drawable/baseline_delete" />
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ class ProgramAdapter(
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
+        fun onDeleteClick(position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgramViewHolder {
@@ -32,6 +34,9 @@ class ProgramAdapter(
         holder.cardView.setOnClickListener {
             itemClickListener.onItemClick(position)
         }
+        holder.deleteButton.setOnClickListener {
+            itemClickListener.onDeleteClick(position)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -44,8 +49,15 @@ class ProgramAdapter(
         notifyDataSetChanged()
     }
 
+    fun removeProgram(position: Int) {
+        programs.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
     class ProgramViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val programNameTextView: TextView = itemView.findViewById(R.id.programNameTextView)
         val cardView: CardView = itemView.findViewById(R.id.card_view)
+        val deleteButton: ImageButton = itemView.findViewById(R.id.deleteButton)
     }
 }
+
