@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,7 +54,7 @@ class DisplayFragment : Fragment(), ProgramAdapter.OnItemClickListener {
         val saveDisplayButton: Button = view.findViewById(R.id.saveDisplayButton)
         val recyclerView: RecyclerView = view.findViewById(R.id.displayRecyclerView)
         val expandableCardView: View = view.findViewById(R.id.expandableCardView)
-        val expandableLayout: LinearLayout = view.findViewById(R.id.expandableLayout)
+        val nestedScrollView: NestedScrollView = view.findViewById(R.id.nestedScrollView)
         val expandIcon: ImageView = view.findViewById(R.id.expandIcon)
 
         adapter = ProgramAdapter(requireContext(), mutableListOf(), this)
@@ -66,10 +67,10 @@ class DisplayFragment : Fragment(), ProgramAdapter.OnItemClickListener {
             transition.duration = 300 // Dauer der Animation in Millisekunden
             TransitionManager.beginDelayedTransition(view as ViewGroup, transition)
             if (isExpanded) {
-                expandableLayout.visibility = View.VISIBLE
+                nestedScrollView.visibility = View.VISIBLE
                 expandIcon.setImageResource(R.drawable.ic_expand_less)
             } else {
-                expandableLayout.visibility = View.GONE
+                nestedScrollView.visibility = View.GONE
                 expandIcon.setImageResource(R.drawable.ic_expand_more)
             }
         }
@@ -247,3 +248,4 @@ class DisplayFragment : Fragment(), ProgramAdapter.OnItemClickListener {
         dialog.show()
     }
 }
+

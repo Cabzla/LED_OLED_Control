@@ -8,6 +8,19 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
+    // XML Strings
+    <string name="display_control_title">Display Steuerung</string>
+    <string name="hint_time">Uhrzeit</string>
+    <string name="hint_train_number">Zugnummer</string>
+    <string name="hint_train_name">Zugname</string>
+    <string name="hint_track_number">Gleisnummer</string>
+    <string name="hint_info_text">Info Text</string>
+    <string name="hint_route_info">Streckeninformationen</string>
+    <string name="update_display">Anzeige aktualisieren</string>
+    <string name="save_program">Programm speichern</string>
+    <string name="saved_display_programs">Gespeicherte Programme:</string>
+
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
