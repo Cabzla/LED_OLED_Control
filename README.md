@@ -29,6 +29,8 @@ The firmware for the ESP32 can be found in the following repository: [ESP32 LED 
 
 ### Android App Setup
 
+APK Download : [APK-Release](https://github.com/Cabzla/LED_OLED_Control/tree/master/app/release).
+
 ### Android App Setup
 
 1. **Clone the Repository**:
